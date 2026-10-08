@@ -51,6 +51,12 @@ Development branches may hold provisional gaps. See [Concepts](001_concepts.md#c
 Existing projects must complete the documented adoption before committing an
 aligned baseline; changing numbers alone does not establish conformance.
 
+The Macrostates CLI is strongly recommended for supported specification checks
+and remains optional. Use relevant manual equivalents when needed, preserving
+the selected requirements and reporting coverage. Meta owns tool guidance;
+[Specification verification](003_execution.md#specification-verification) defines
+when checks fit a workflow and a proposed commit.
+
 Development branch creation and merge are optional, explicit workflow types.
 On a definer-requested merge request or merge, check readiness first; if required
 checks fail or remain unavailable, clearly warn and do not perform that operation.
@@ -84,6 +90,7 @@ handling. Read an annex only when a core document says the situation applies.
 - Subproject coordination inside a parent project.
 - Discovery of directory-scoped specifications and identification of subprojects.
 - Gaps, decisions, completion checks, and quality expectations.
+- Proportionate specification verification with optional CLI assistance.
 
 Project-specific requirements belong in a project package, not here.
 

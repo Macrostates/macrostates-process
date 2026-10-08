@@ -762,6 +762,10 @@ Projects should automate declaration, alignment and release checks in their
 normal validation, and protect the primary branch with required checks when
 their hosting setup permits. Such checks verify bookkeeping; tests and review
 establish conformance. Local checks supplement the implementer's responsibility.
+The Macrostates CLI is strongly recommended for the policies its installed
+version supports. CLI installation and CLI-specific pre-commit hooks and CI wiring
+remain optional; apply the required checks manually or through other suitable
+automation when needed. See [Specification verification](#specification-verification).
 
 An editorial composition revision can enter the primary branch while the unchanged
 implementation declaration references an earlier exact revision at the same
@@ -827,6 +831,49 @@ normally starts at `0.1.0` / `spec-0.1.0` unless another baseline is defined.
 
 When ambiguity, authority conflict, or workflow conflict is found, read
 `annex_conflicts.md`.
+
+### Specification verification
+
+Prefer the Macrostates CLI when it is available and supports the selected
+composition, package releases and policy versions. Meta's `annex_cli.md` owns
+command guidance and manual equivalents; locate it through the selected Meta
+package's entrypoint. CLI installation and use remain optional. Continue with
+relevant manual verification when it is unavailable or incompatible, or when
+additional inspection is necessary. The same selected requirements apply with
+either method. Tool absence alone does not block work that can be verified.
+
+Apply specification checks at these points:
+
+- During setup and after importing or deliberately updating packages, validate
+  the resulting selection, dependencies, metadata, paths and entrypoints. Check
+  imported package integrity against the verified selected source.
+- After changing the composition, package metadata, specification entrypoints,
+  reading/authority orders or local specification references, check the affected
+  structure and dependency relationships.
+- When installed external package files or their provenance/lock baseline change,
+  or unexplained modification is suspected, check the relevant package integrity.
+  Authorized project-owned specification edits remain ordinary specification work.
+- Before committing specification-affecting changes, inspect the proposed staged
+  tree and apply the affected checks. CLI `check --staged` can assist where
+  supported; an equivalent manual inspection is valid. Earlier working-tree
+  results alone do not verify differently staged files.
+- At a workflow's completion or requested review, confirm that the relevant
+  verification evidence covers the delivered state. Apply release and primary-
+  branch gates separately when those operations are in scope.
+
+Choose the smallest scope that covers the change and its dependencies. Reuse
+relevant evidence for unchanged package contents when its baseline and provenance
+remain valid. Starting a new session or changing unrelated implementation files
+alone does not require rereading every package or repeating a full integrity
+comparison. Existing before-commit version/alignment responsibilities still apply.
+
+Record the CLI version and relevant commands, or the manual checks and compared
+baseline, with results and coverage limits in the workflow. Distinguish tool
+incompatibility from a failing check. Investigate reported modifications and
+metadata errors; using a manual method does not excuse an unresolved failure.
+If required verification cannot be completed, report the missing evidence and
+preserve the applicable readiness gate. A passing structural or integrity check
+does not establish semantic consistency or implementation conformance.
 
 ### Completion checks
 
