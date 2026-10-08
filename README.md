@@ -103,3 +103,10 @@ Conditional annexes:
   workflow conflict is found.
 - [Exceptions](annex_exceptions.md): read when an `Exception` workflow is
   needed.
+
+## License
+
+This specification package, including its documentation, metadata, and bundled
+resources, is licensed under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Lucas Lopez.
