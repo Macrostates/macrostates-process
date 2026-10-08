@@ -20,6 +20,13 @@ and ensure an open workflow record covers the change. See
 [Artifacts](002_artifacts.md) for workflow record structure and
 [Execution](003_execution.md) for when and how to use workflow records.
 
+On every request, compare its objective with the workflow's original scope.
+Track distinct objectives separately, even when they share a screen or origin.
+An instruction to perform new work authorizes its tracking record; closure is a
+separate decision. Show `Delivery state: awaiting_acceptance` when implementation
+and applicable checks are finished. See
+[Scope check for every request](003_execution.md#scope-check-for-every-request).
+
 Workflow closure requires explicit definer confirmation, including completion,
 abandonment, and supersession. When work appears done, suggest closure and keep
 the workflow open until the definer confirms. See [Execution](003_execution.md).

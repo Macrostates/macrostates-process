@@ -283,9 +283,41 @@ another small, related change in the same area, the implementer should suggest
 a broader tuning workflow when doing so better represents the emerging work.
 Obtain explicit definer confirmation before superseding the narrower workflow.
 
-Do not broaden a workflow merely to hide unrelated work. If the new request has
-a different change depth, affects a substantially different area, or changes
-the impact profile of the work, suggest opening a separate workflow instead.
+Do not broaden a workflow merely to hide unrelated work. A different change
+depth, substantially different area, or changed impact profile is a signal to
+apply the scope check below and open separate tracking for a distinct objective.
+
+### Scope check for every request
+
+Before assigning each new request to a workflow, compare its objective and
+acceptance criteria with the workflow's original objective and recorded scope.
+Continue that workflow only when the request corrects, completes, or validates
+that same outcome. Sharing a screen, file, subsystem, conversational thread, or
+originating change is not sufficient to establish a shared objective.
+
+When the request introduces a distinct outcome, explain the boundary and open a
+separate, appropriately named workflow before changing files. The definer's
+instruction to perform that new work authorizes creating its tracking record;
+do not require a second permission solely to open the record. Link the related
+workflows and record the scope decision without rewriting their original intent
+or moving historical work merely to make the scope appear consistent.
+
+For example, replacing text actions with conventional icons and correcting an
+icon's placement can share an objective. Changing device-rotation behavior or
+making the entire application fullscreen introduces separate acceptance criteria
+and should receive separate tracking, even if first noticed during icon review.
+
+An open workflow awaiting acceptance is not a default destination for new work.
+Record its delivery state as `awaiting_acceptance` once requested work and
+applicable checks are finished; identify remaining device checks or review
+explicitly. Corrections within its original scope may resume `implementing`.
+A new objective belongs in its own workflow while the earlier one remains open.
+
+Creating the new record does not close, abandon, pause or supersede the earlier
+workflow, or authorize additional product scope. Existing conflict, phase-change,
+and explicit closure/supersession confirmation rules still apply. Ask only for
+an unresolved scope or conflict decision, not for permission already supplied by
+the request. Record both the continuing review obligations and the new work.
 
 ### Continuing a workflow
 
@@ -314,11 +346,11 @@ If the switch affects files, assumptions, or decisions owned by another open
 workflow, ask the definer whether to pause, close, abandon, or supersede that
 workflow before proceeding.
 
-When a new request is useful but should happen before the current workflow is
-finished, the implementer should suggest opening a parallel workflow record for
-the new work. When the definer returns to a previous workflow, the implementer
-should summarize the parallel workflow and ask whether it should remain open or
-be closed if its purpose has been satisfied.
+When a new authorized request has a distinct objective and should happen before
+the current workflow is finished, open a separate workflow under the scope-check
+rules above. Explain any impact on unfinished work. On returning to an earlier
+workflow, summarize the separate workflow's delivery and review state. Keep it
+open unless the definer explicitly confirms closure.
 
 When several small adjacent requests reveal that a narrow workflow has become a
 broader tuning session, the implementer may propose superseding the narrow

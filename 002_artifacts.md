@@ -186,6 +186,8 @@ Each workflow entry should include:
 - Started at.
 - Last updated at.
 - Original request.
+- Objective, scope and acceptance criteria.
+- Delivery state.
 - Work done.
 - Files touched when useful.
 - Remaining work.
@@ -239,6 +241,22 @@ While awaiting confirmation, keep the workflow in its open location with an open
 status, normally `in_progress`. Record that the requested work and checks are
 finished, that definer review and closure confirmation remain, and any suggested
 next step. Do not invent a closed or completed status to represent pending review.
+
+Track delivery separately from workflow status using `Delivery state`:
+
+- `implementing`: requested work or applicable implementation checks remain.
+- `awaiting_acceptance`: requested work and applicable checks are finished;
+  definer review, explicitly listed device acceptance checks or closure remain.
+- `accepted`: the definer has accepted the result; closure still requires its
+  own explicit confirmation unless already included in that instruction.
+
+Use this field in new records and add it to existing records when resuming or
+reviewing them. It supplements the established statuses; it does not introduce
+a new closed status or imply acceptance from passing checks. Put delivery state
+near status so an open record awaiting review is easy to distinguish from active
+implementation. Record remaining acceptance checks and closure separately from
+implementation tasks. An open record must not become a catch-all for new work;
+apply [the per-request scope check](003_execution.md#scope-check-for-every-request).
 
 Only workflows with open statuses should remain directly under
 `./implementation/workflows/`. When a workflow receives a closed status, move
