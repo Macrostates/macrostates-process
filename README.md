@@ -25,6 +25,11 @@ and ensure an open workflow record covers the change. See
 [Artifacts](002_artifacts.md) for workflow record structure and
 [Execution](003_execution.md) for when and how to use workflow records.
 
+New workflow filenames use `YYYY-MM-DD__<time-id>__short-descriptive-name.md`,
+with the UTC date followed by a six-character Base32 ID encoding only milliseconds
+since midnight. Existing legacy filenames remain valid. See
+[Workflow records](002_artifacts.md#workflow-records) for encoding and collisions.
+
 On every request, compare its objective with the workflow's original scope.
 Track distinct objectives separately, even when they share a screen or origin.
 An instruction to perform new work authorizes its tracking record; closure is a
@@ -77,6 +82,7 @@ handling. Read an annex only when a core document says the situation applies.
 - Project scaffolding during specification.
 - Workflow execution against specifications.
 - Subproject coordination inside a parent project.
+- Discovery of directory-scoped specifications and identification of subprojects.
 - Gaps, decisions, completion checks, and quality expectations.
 
 Project-specific requirements belong in a project package, not here.

@@ -15,6 +15,7 @@ sections below define how to apply them.
 Before changing files:
 
 - Read the project-local specification entrypoint.
+- Discover and read applicable directory-scoped specifications before edits.
 - Check `implementation/workflows/` for open workflow records.
 - Decide whether the request starts, continues, switches, closes, or only
   reviews a workflow.
@@ -64,6 +65,7 @@ context:
 
 - Read the project-local specification entrypoint.
 - Read relevant package entrypoints and specifications.
+- Discover directory-scoped specifications applicable to each target path.
 - Check for open workflow records.
 - Identify whether the request starts, continues, interrupts, closes, or reviews
   a workflow.
@@ -79,10 +81,32 @@ process, the implementer must still follow the process. When no ordinary
 workflow type can honestly contain the request, use an `Exception` workflow
 record and read `annex_exceptions.md`.
 
+### Directory-scoped specifications
+
+Follow the selected Meta package's `002_project-composition.md`, section
+`Directory-scoped specifications`, to discover applicable local `specs/main.md`
+entrypoints along each target path, including existing ancestors of new files.
+Read from outermost to innermost, follow each entrypoint's reading order, and
+respect the enclosing composition's authority placement and strict scope limits.
+Directory specifications are authoritative even without package metadata or an
+independent lifecycle. They remain part of the enclosing project's contract,
+phase, versioning and workflow context.
+
+This discovery is needed for internal edits, including specification edits; it
+does not require reading a component's internal specifications merely to consume
+its public interface. A local specification set does not make the directory a
+subproject. Identify separately composed or maintained units under
+[Subprojects](001_concepts.md#subprojects) before choosing lifecycle or tracking
+rules. Do not treat a separately composed subproject's `specs/main.md` as an
+ordinary directory entrypoint in the parent's composition.
+
 ### Subprojects
 
 When requested work affects a subproject, the implementer should identify both
 the parent-project context and the subproject context before changing files.
+Use the identification rules in [Concepts](001_concepts.md#subprojects), not the
+presence of a `specs/` directory alone. Ask only when an unresolved boundary
+materially changes the applicable authority, lifecycle or maintenance rules.
 
 The parent-project context determines which parent workflow record covers the
 file change and how the subproject change affects the parent project.
@@ -257,7 +281,13 @@ When the project phase is `active`, do not open `Initial specification`,
 
 ### Starting a workflow
 
-When starting a workflow record, capture enough context to resume later:
+When starting a workflow record, capture enough context to resume later.
+
+Allocate its filename using the UTC date and compact time-ID rules in
+[Workflow records](002_artifacts.md#workflow-records), checking both open records
+and `history/` before creating the file.
+
+Record:
 
 - Workflow type.
 - Project phase.
@@ -695,7 +725,8 @@ to be zero at integration. Assign the new release date when finalizing an
 implementation version; rebuilding or tagging the same candidate retains it.
 
 For an unchanged contract, specification revisions distinguish finalized edits to
-the authoritative root entrypoint, composition and selected package contents.
+the authoritative root entrypoint, composition, selected package contents and
+applicable repository-specific directory specifications.
 Only implementation changes affecting the delivered result require an implementation
 revision. Keep workflow/test-only and non-authoritative documentation changes in
 Git history without manufacturing product releases.

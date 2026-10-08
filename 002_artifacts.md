@@ -5,8 +5,13 @@ specification-driven work.
 
 ## Specification documents
 
-`specs/` contains specification packages as defined by the meta package.
-Specification documents describe intended behavior and are definer-owned.
+The project-root `specs/` contains the composition and specification packages
+defined by Meta. Implementation directories may also contain repository-specific
+`specs/main.md` entrypoints and related directory-scoped specifications under
+the selected Meta package's `002_project-composition.md`, section
+`Directory-scoped specifications`.
+These local documents are not specification packages. All specification documents
+describe intended behavior and are definer-owned.
 
 Implementers must not edit specifications unless the definer deliberately asks
 for specification work. Routine implementation, testing, cleanup, documentation,
@@ -103,7 +108,10 @@ The specification composition's authoritative version is `project.version` in
 `specs/composition.yaml` (or the single alternative spelling allowed by Meta).
 Use the `spec-MAJOR.MINOR.REVISION` format defined in
 [Concepts](001_concepts.md#contract-based-versioning). This identifies the complete
-specification snapshot: root entrypoint, composition and selected package content.
+specification snapshot: root entrypoint, composition, selected package content
+and applicable repository-specific directory specifications. Independently
+composed subprojects retain their own snapshots; the parent records its
+integration requirements.
 Package versions and source selectors remain independent Meta-owned fields.
 
 Once an implementation baseline exists, its authoritative release declaration is:
@@ -168,6 +176,11 @@ A subproject may have local `specs/`, `implementation/`, workflow records,
 decision records, metadata, generated documentation, or a different lifecycle
 defined by another tool or project convention. A subproject may also have no
 local specifications or lifecycle artifacts at all.
+
+The existence of a local `specs/main.md` does not by itself establish a subproject.
+Repository-specific directory specifications remain in the enclosing project's
+artifact and versioning context unless a separate project context is established
+under [Concepts](001_concepts.md#subprojects).
 
 When subproject artifacts exist, the implementer should inspect and respect
 them before changing subproject-internal files. When they do not exist, the
@@ -252,12 +265,43 @@ The `history/` directory may usually be ignored during session startup unless
 the definer asks for historical context or an open workflow references a closed
 workflow.
 
-Each workflow entry has its own Markdown file. Workflow filenames use this
-format:
+Each workflow entry has its own Markdown file. New workflow filenames use this
+format, with double underscores separating the date, compact time ID and name:
 
 ```text
-<yyyy-mm-dd>-<short-descriptive-name>.md
+<yyyy-mm-dd>__<time-id>__<short-descriptive-name>.md
 ```
+
+Use the workflow's creation instant in UTC. Keep its calendar date in the
+`yyyy-mm-dd` prefix. The time ID encodes only milliseconds elapsed since UTC
+midnight, from `0` through `86399999`, as exactly six uppercase Crockford Base32
+characters, zero-padded on the left. Use this alphabet in the stated order:
+
+```text
+0123456789ABCDEFGHJKMNPQRSTVWXYZ
+```
+
+Encode the integer `((hour * 60 + minute) * 60 + second) * 1000 + millisecond`
+in base 32. For example, `11:14:00.000 UTC` becomes `16J460`. Six characters are
+the minimum fixed width for representing an entire day's milliseconds in this
+alphabet; five characters cover only `33554432` values. This is a custom compact
+time ID, not a standard ULID. It contains no date, counter or random data, and
+must not receive a separate randomness or disambiguation suffix.
+
+Keep the assigned date and time ID stable when resuming, pausing, closing or
+moving a workflow into `history/`. Lexical sorting orders these filenames by UTC
+date and millisecond of day. Clock differences can affect this ordering, so it
+does not establish causality or workflow authority. Continue recording
+human-readable `Started at` separately.
+
+The time-only ID is not globally unique: independent workflows created in the
+same UTC millisecond can share a date/time prefix. Different descriptive names
+remain distinct filenames. Before writing, check open records and `history/` for
+the full destination filename and never overwrite another record. If different
+workflows have the same full filename, choose descriptive names that distinguish
+their actual scopes and repair references. Preserve the encoded creation time;
+do not invent a later time or silently add random characters. Apply the same
+collision handling when reconciling concurrent branch additions.
 
 The descriptive name must be lowercase words separated by hyphens. It should be
 short enough to scan while still identifying the work.
@@ -265,10 +309,23 @@ short enough to scan while still identifying the work.
 Examples:
 
 ```text
-2026-08-26-initial-specification.md
-2026-08-27-storage-conflict-amendment.md
-2026-08-28-api-doc-refresh.md
+2026-10-07__16J460__initial-specification.md
+2026-10-07__16J558__storage-conflict-amendment.md
+2026-10-08__000000__api-doc-refresh.md
 ```
+
+Existing date-based, date/counter and full-ULID filenames remain valid; adopting this
+convention does not require renaming them or rewriting historical records.
+Readers and tooling must continue to discover legacy records. If migration is
+explicitly requested, record the old-to-new filename mapping and update references
+to moved files. Derive each migrated date and time ID from the recorded
+`Started at`, using its known timezone and available precision, converted to UTC. For
+minute-only records, encode the recorded minute with seconds and milliseconds set
+to zero; do not claim those finer components were measured. Clarify an unknown
+timezone when it affects ordering. Retain already conforming date/time prefixes
+and the original human-readable start times. A mixed legacy/current directory
+does not have a single chronological lexical order until legacy records are
+migrated.
 
 Each workflow entry should include:
 

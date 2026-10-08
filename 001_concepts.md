@@ -159,6 +159,21 @@ proceed.
 
 A subproject is a bounded project-like unit that lives inside a parent project.
 
+Identify a subproject from the definer's explicit designation, the enclosing
+project's specifications, or established metadata and maintenance practices that
+show a partly separate lifecycle. Evidence may include its own composition,
+release policy, upstream repository or maintenance records. A directory name,
+source package, build file or `specs/main.md` alone is not enough to infer a
+separate lifecycle. No universal marker file or subproject registry is required.
+
+In particular, repository-specific directory specifications may describe an
+ordinary component that remains entirely within the parent project's lifecycle.
+Their scope and authority follow the selected Meta package's
+`002_project-composition.md`, section `Directory-scoped specifications`.
+Do not invent a separate phase, version or workflow system merely because a
+component has local specifications. If the evidence leaves the boundary unclear
+and it changes the applicable lifecycle or authority, ask the definer.
+
 Subprojects may exist for many reasons: vendored libraries, generated
 components, independently maintained modules, examples, tools, documentation
 sites, infrastructure areas, or other parts of a repository whose lifecycle is
