@@ -64,6 +64,68 @@ Topic implementation documents should usually include:
 - Known gaps.
 - Related decisions.
 
+## Version declarations
+
+The specification composition's authoritative version is `project.version` in
+`specs/composition.yaml` (or the single alternative spelling allowed by Meta).
+Use the `spec-MAJOR.MINOR.REVISION` format defined in
+[Concepts](001_concepts.md#contract-based-versioning). This identifies the complete
+specification snapshot: root entrypoint, composition and selected package content.
+Package versions and source selectors remain independent Meta-owned fields.
+
+Once an implementation baseline exists, its authoritative release declaration is:
+
+```text
+implementation/
+  release.yaml
+```
+
+Use these required fields, illustrated with hypothetical versions:
+
+```yaml
+version: "6.4.8"
+specification: "spec-6.4.2"
+release_date: "2026-09-21"
+```
+
+- `version`: implementation `MAJOR.MINOR.REVISION`, with no prefix or suffix.
+- `specification`: exact composition version used as this implementation's
+  specification baseline; its Major.Minor must match `version`.
+- `release_date`: a valid calendar date in `YYYY-MM-DD`, assigned when finalizing
+  the version and retained by rebuilds. It is not proof of remote publication.
+
+Platform packages may define namespaced extensions, for example an `android`
+mapping. They own their extension schema and build integration; Process does not
+prescribe a platform's installation counter or packaging details. Required fields
+must be validated; do not silently fall back to a second source when malformed
+or missing. Version strings and dates should be quoted in YAML.
+
+Builds and generated documentation consume the declaration instead of maintaining
+competing hand-edited versions or dates. A clean checkout must supply release
+metadata without Git, network, local settings or manually supplied parameters.
+Ordinary builds do not mutate declarations, commits or tags.
+
+On a development branch this file can describe a version being prepared; neither
+its presence nor its date makes it a release. Record development status, missing
+coverage and validation evidence in the workflow. Intermediate build identity can
+include a separately displayed commit ID; do not disguise an incomplete build as
+a validated release or insert development labels into canonical declarations.
+
+The composition may later have a higher specification revision at the same
+Major.Minor while the declaration still points to its earlier exact baseline.
+Do not update an old implementation's baseline solely to make these revisions
+equal. When finalizing a new implementation version, record the composition
+actually used for its validation.
+
+Git commits preserve intermediate history. Annotated composition and implementation
+release tags preserve finalized declarations and source snapshots; their names
+and verification rules are defined in
+[Execution](003_execution.md#release-commits-tags-and-publication). Do not put a
+commit's own hash inside its tracked declaration or create a growing set of
+duplicate release YAML files. Historical release declarations are read at their
+tags. Existing projects follow the explicit adoption procedure before claiming
+their first aligned baseline.
+
 ## Subproject artifacts
 
 Subprojects may have their own artifacts, but this process does not require all
@@ -183,6 +245,7 @@ Each workflow entry should include:
 - Change depth.
 - Branch or worktree context when known.
 - Requested by.
+- Implementer.
 - Started at.
 - Last updated at.
 - Original request.
@@ -213,6 +276,33 @@ use another confident source, such as explicitly provided definer identity or
 global Git configuration. If the implementer cannot identify the definer
 confidently, it should ask for a name, email, handle, or preferred identifier
 before creating the workflow record.
+
+`Implementer` identifies who performs the work, independently of `Requested by`:
+
+- For a person, record their name. If unavailable, record a known handle or an
+  explicitly unknown name rather than attributing the work to the requester.
+- For a model, record its name and version or exact model identifier as exposed
+  by the execution environment. Include relevant available parameters, such as
+  reasoning/effort level, and the agent or tool used when useful for provenance.
+  A tool name alone does not identify its underlying model.
+- State the source of the identity and parameters, such as the person's own
+  identification or session/runtime metadata. Mark unavailable values as unknown
+  or not exposed; do not infer an exact revision or effort level from a family
+  name, defaults, output style, or another session's configuration. Missing
+  metadata does not block otherwise authorized work.
+
+Use a compact field, for example `Person — NAME` or
+`Model — NAME; version/identifier: VALUE; effort: VALUE; agent: TOOL; source: SOURCE`.
+Record only relevant non-secret configuration, never credentials or private
+prompts. When multiple implementers contribute or a model/version/configuration
+changes, retain the earlier attribution and append a dated entry identifying
+the contributor, changed parameters and work scope. Do not overwrite history
+with the last implementer's identity or imply it performed all prior work.
+
+Include this field in new records. When resuming an older workflow, add the
+current implementer for the resumed work and mark earlier attribution unknown
+unless reliable evidence exists. Do not rewrite archived workflows merely to
+backfill identities.
 
 `Started at` and `Last updated at` should include date and time to minute
 precision using this format:

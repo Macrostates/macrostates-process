@@ -32,6 +32,88 @@ be a human when explicitly acting in that role.
 When a reusable process rule conflicts with a project-local specification
 entrypoint, the project-local authority order decides the conflict.
 
+## Contract-based versioning
+
+For projects using this process, the composition version identifies the combined
+specification contract and its specification revision. An implementation version
+identifies an implementation of that contract and its own implementation revision.
+This is contract-based versioning, not strict Semantic Versioning:
+
+- Composition: `spec-MAJOR.MINOR.REVISION`, for example `spec-6.4.2`.
+- Implementation: `MAJOR.MINOR.REVISION`, for example `6.4.8`.
+- Each numeric component is a non-negative decimal integer without leading zeroes.
+  Release declarations have exactly three numeric components, without additional
+  suffixes or an `impl-` prefix.
+- Shared `MAJOR.MINOR` identifies the effective project contract. Revision counters
+  are independent; specification revision 2 and implementation revision 8 can
+  describe the same contract. Neither counter must catch up with the other.
+
+The contract includes the effective requirements, compatibility commitments and
+required operating/development behavior of the composed project. Classify a
+change by its meaning after applying composition authority, not by the number of
+changed files or the amount of implementation work. A large rewrite that preserves
+the contract changes only the implementation revision. A fix restoring already
+specified behavior also changes only the implementation revision.
+
+Use the highest applicable impact against the latest integrated baseline:
+
+| Change | Composition | Implementation |
+| --- | --- | --- |
+| Incompatible contract change | Increment Major; reset Minor and Revision to zero | Use the same new Major.Minor; reset Revision to zero once implemented |
+| Backward-compatible contract addition or change | Increment Minor; reset Revision to zero | Use the same new Major.Minor; reset Revision to zero once implemented |
+| Editorial/specification restructuring or package selection change with no effective contract change | Increment specification Revision | No implementation bump solely for this change |
+| Implementation change preserving the contract | No composition bump unless its contents also change | Increment implementation Revision |
+| Changes on both sides preserving the contract | Increment specification Revision | Increment implementation Revision |
+
+A package version change is not automatically a project contract change. Evaluate
+the effective combined requirements. Editorial corrections, equivalent rewrites
+and non-semantic dependency updates still need a new composition revision when
+finalized, so different specification snapshots remain distinguishable. A change
+only to implementation tracking, tests or non-authoritative documentation with no
+effect on the delivered implementation does not require an implementation bump;
+Git identifies those changes. Record the classification, including no-bump decisions.
+
+Individual specification packages continue to use Meta's independent
+`major.minor.patch` rules and package release tags. The composition version is not
+the version of the project-local package, nor must any package's Major.Minor match
+the implementation. Package Major changes retain Meta's explicit approval rule.
+Automatically assigning a project contract version never authorizes an underlying
+behavior or compatibility change that the definer has not approved.
+
+### Integrated and development states
+
+The primary branch, normally `main`, represents the current integrated state.
+Direct development on it is supported; development branches are optional. Once
+an implementation baseline exists, every new primary-branch commit must have
+matching composition and implementation Major.Minor and implemented coverage of
+that contract. Temporary working-tree mismatches are allowed before committing.
+Changing numbers alone cannot establish compliance.
+
+A development branch may commit a provisional specification contract before its
+implementation is complete. Record the gap, keep the actual implemented version
+honest, and do not release that state. Provisional versions must be reassessed
+against the latest target at integration, not reserved from an old branch baseline.
+The primary-branch invariant covers each integrated state on its first-parent
+history; development commits may remain reachable through a merge's side history.
+An ordinary merge is therefore permitted without rewriting all intermediate work.
+
+Before the first implementation exists, specification-only projects need only a
+composition version. Bootstrapping may contain documented incomplete work until
+the first implementation baseline, even if the project phase label is still
+bootstrapping afterward. This exception must not be used to relax alignment for
+an existing functioning implementation.
+
+The primary branch contains accepted integrated contracts; a primary-branch commit
+is not automatically a published release or workflow closure. A released
+implementation records the exact specification revision used for validation.
+Later editorial specification revisions with the same Major.Minor may enter the
+primary branch without changing that release's declaration or requiring an app
+release. New contract requirements must be implemented before entering it.
+
+See [Artifacts](002_artifacts.md#version-declarations) for declarations and
+[Execution](003_execution.md#versioning-and-integration) for automatic updates,
+validation, release boundaries and adoption by existing projects.
+
 ## Project phase
 
 Project phase describes the broad development stage. It helps the implementer
@@ -242,7 +324,10 @@ The implementer should not implement the changed behavior unless the definer
 explicitly asks for implementation work. A specification update may
 intentionally create an implementation gap, but need not do so. When it reflects
 an implementation amendment that already satisfies the updated specifications,
-it creates no gap and requires no implementation update.
+it creates no gap and requires no implementation update. A resulting gap may
+remain in the working tree or on a development branch; it must not enter a
+primary-branch commit after an implementation baseline exists. Follow the
+integrated-state and existing-project adoption rules.
 
 After closing a specification update, the implementer should recommend a
 `Review or gap assessment` workflow to the definer when it would help determine
@@ -299,6 +384,31 @@ non-authoritative documentation.
 
 Ask the definer before creating new documentation files, splitting existing
 documentation, or changing documentation ownership conventions.
+
+### Development branch creation
+
+Use this workflow when the definer requests creating a development branch to
+establish an isolated working context. It records the starting branch, commit,
+specification composition version and implementation version, and links the work
+to be done there. It does not itself authorize feature changes or remote publication.
+Specification and implementation work retain their corresponding workflow types.
+
+This workflow is optional. Direct primary-branch development remains valid when
+each committed result satisfies the integrated-state rules. Branch setup can be
+delivered and proposed for closure as soon as its baseline and links are recorded;
+it need not stay open for the lifetime of the branch.
+
+### Development branch merge
+
+Use this workflow when the definer requests a merge request (also called a pull
+request) or integration of a development branch into a designated target. It
+checks the combined result against the latest target, establishes version and
+implementation readiness, and performs only the authorized integration operation.
+
+If required readiness checks fail or cannot be completed, the implementer must
+clearly warn the definer and must not create the merge request or perform the
+merge. An instruction to create a merge request does not authorize merging it.
+See [Execution](003_execution.md#development-branch-merge) for the procedure.
 
 ### Exception
 

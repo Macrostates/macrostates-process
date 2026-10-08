@@ -24,8 +24,10 @@ Before changing files:
 
 ## Responsibility
 
-The implementer is responsible for maintaining workflow records and for keeping
-work inside the process. The definer has authority over intent and direction,
+The implementer is responsible for maintaining workflow records, following the
+versioning rules, and keeping work inside the process. It must classify changes,
+maintain declarations and check alignment without waiting for the definer to ask
+for a version bump. The definer has authority over intent and direction,
 but the implementer must find a process-valid way to reflect that intent before
 changing files.
 
@@ -497,7 +499,11 @@ specifications, confirm the change is deliberate specification work. Determine
 whether the update creates an implementation gap and make any gap visible.
 When the implementation already satisfies the updated specifications, such as
 after an implementation amendment, record that no gap was created and no
-implementation update is needed.
+implementation update is needed. A specification update may leave an explicit
+implementation gap in the working tree or a development branch; after an
+implementation baseline exists, do not commit that gap to the primary branch.
+See [Versioning and integration](#versioning-and-integration), including adoption
+of this policy by an existing project.
 
 After closing the specification update, consider whether a `Review or gap
 assessment` workflow would help evaluate the need for an implementation update.
@@ -505,6 +511,45 @@ If so, recommend it to the definer and briefly explain what it would resolve.
 Do not recommend it routinely when there is no implementation to assess, when
 alignment is already verified, or when the need and scope of an implementation
 update are already clear.
+
+#### Maintaining coherent specifications
+
+During authorized specification work, update each requirement in its authoritative
+section. Reconcile affected summaries, cross-references, defaults, messages and
+acceptance criteria in the selected project context. Integrate a changed rule
+with its exceptions; do not append a replacement while leaving contradictory
+historical wording active elsewhere. Authority rules resolve already-decided
+changes; unresolved choices remain explicit for the definer.
+
+Each topic should have an identifiable owner. Prefer concise links from other
+sections to competing normative copies. Keep exact user messages, dynamic
+placeholders, icons and their triggers in the corresponding feature sections.
+Use a consistent feature structure where helpful: behavior, states and failures,
+messages/actions, safety and lifecycle constraints, and acceptance criteria.
+A package entrypoint should help a reader locate those owners and dependencies.
+Do not reorganize a curated package merely to enforce a template.
+
+When reorganization is requested, inventory existing requirements and map their
+new locations before removing or moving text. Preserve substantive requirements,
+exceptions, exact copy, compatibility and verification obligations. Record why a
+clause is consolidated or superseded; do not discard it solely because it is old.
+A refactor must not silently change product behavior, authority or permissions.
+Preserve useful reference routes or update affected references explicitly.
+
+Implementation can reveal missing specification detail. Inspect observable
+behavior and relevant tests when reproducing an established product is the goal,
+but do not promote an implementation accident or current defect into intended
+behavior. Record unresolved implementation/specification differences separately.
+Private mechanisms belong in decision records unless they are required constraints.
+Historical decisions, temporary testing deferrals, device results and current
+progress belong in implementation records, not permanent product requirements.
+
+Before reporting the update complete, check requirement coverage, contradictory
+or superseded wording, links/anchors, reading order, package independence and
+composition/version metadata. Keep an old-to-new requirement map for substantial
+reorganizations. Run checks appropriate to the changed artifacts; a specification
+refactor alone does not require an application release or comprehensive runtime
+retest. Record any implementation gap and follow the existing publication rules.
 
 ### Implementation update
 
@@ -534,6 +579,75 @@ Follow the specification package that owns the documentation type. Do not create
 or reorganize documentation files unless the definer asks or the owning package
 allows it.
 
+### Development branch creation
+
+1. Establish the definer-authorized objective, starting branch and repository.
+   Read current Git state and the applicable repository rules. A request to create
+   a branch and implement a feature authorizes both scopes; do not ask again for
+   already authorized operations. Track setup separately from feature work.
+2. Inspect the starting commit, existing branch names and uncommitted changes.
+   Preserve existing work. Do not silently stash, discard, commit, or carry unrelated
+   edits into the new branch. Resolve material uncertainty about which work belongs
+   there before changing its context.
+3. Choose a concise descriptive branch name unless the definer supplied one.
+   Check for an existing branch; do not reset or overwrite it. Create and switch
+   to the authorized branch from the agreed baseline.
+4. Record its name, starting branch and commit, composition version, implementation
+   version if present, and any deliberately carried uncommitted work. Explicitly
+   record unavailable legacy declarations or incomplete bootstrapping state.
+5. Link the specification/implementation workflows that will use it. Mark branch
+   setup delivered once established; propose closure under the normal rules.
+
+Branch creation alone does not bump versions, authorize feature implementation,
+publish a branch, or create release tags. Follow repository authorization rules
+for each operation; prior explicit authorization remains valid.
+
+### Development branch merge
+
+Use this workflow for a definer-requested merge request/pull request or merge.
+
+1. Identify source and target branches, repository/remote, the exact requested
+   operation, related work and intended scope. Inspect the latest target state;
+   if its currency cannot be established, report the missing readiness evidence.
+2. Review the whole proposed change relative to that target, including selected
+   packages, effective contract changes, implementation coverage, data/format
+   compatibility, declarations, documentation and unresolved work. Do not trust
+   a branch's provisional version, earlier intention, or old review in place of
+   assessing the actual combined result.
+3. Resolve conflicts within authorized scope without discarding unrelated work
+   or weakening specifications to make incomplete behavior appear compliant.
+   Follow repository permissions for branch, rebase and publishing operations.
+   Recalculate version impact against the latest target; avoid reusing an already
+   finalized version for different implementation or specification contents.
+4. Validate the proposed merged tree, not just the source branch alone. Check
+   aligned Major.Minor for primary-branch integration, an accurate specification
+   baseline reference, applicable tests/builds, metadata, and compatibility.
+   Missing required checks, unresolved conflicts or implementation gaps block
+   readiness. Record what ran and its source/target commit IDs. Apply required
+   checks proportionately; do not invent a comprehensive release qualification
+   requirement for a narrow documentation change.
+5. If not ready, clearly state **Not ready to merge**, identify blockers and
+   consequences, and explain the work needed. Do not create the merge request
+   (including a draft as a workaround), perform the merge, create a release tag,
+   or claim readiness. Continue authorized corrective work when possible. A
+   request to merge is not evidence that checks passed or permission to ignore
+   them. Record the failed gate in the workflow.
+6. When ready, perform only the requested operation. A merge request includes a
+   concrete summary, version changes, validation and relevant limitations. Creating
+   it does not authorize merging it. Conversely, an authorized direct merge need
+   not create a remote request unless repository policy requires one. Do not add
+   redundant approval steps for operations already explicitly authorized.
+7. Before the actual merge, confirm that the source and target still match the
+   reviewed commits and that required reviews/checks remain satisfied. Reassess
+   changed commits and rerun affected checks if either moved. After merging,
+   verify the resulting target state and record the request link or merge commit,
+   versions, checks and remaining authorized steps. Publication, release tagging,
+   branch deletion and workflow closure follow their own applicable rules.
+
+For an intermediate development target, explicitly record its permitted gaps;
+do not present integration there as primary-branch or release readiness. Required
+checks for the agreed scope still apply.
+
 ### Exception
 
 Use this workflow when the definer explicitly asks for something that skips,
@@ -545,6 +659,129 @@ Also use this workflow to recover from a `conflicting` project phase.
 Read `annex_exceptions.md` before executing an exception workflow.
 
 ## Cross-cutting rules
+
+### Versioning and integration
+
+#### Automatic classification and updates
+
+Apply [Concepts](001_concepts.md#contract-based-versioning) and maintain
+[Version declarations](002_artifacts.md#version-declarations) during ordinary
+authorized work. Classify semantic contract changes separately from textual
+specification changes and implementation-only changes. Assess compatibility of
+the effective composition, not an upstream package's version number alone.
+
+Use one version bump per coherent finalized change set, relative to the previous
+finalized version on that line of work. Edits, retries, build runs and fixes during
+validation of that same uncommitted change set do not each receive another bump.
+If scope changes, recalculate the highest impact against the same baseline. A
+later distinct version-affecting change needs a new version even when the earlier
+version was committed but not tagged or published. Do not mechanically increment
+both independent revision counters.
+
+For a new contract Major or Minor, reset each side's revision to zero when that
+side first finalizes it. A development branch may then advance specification
+revisions before the first conforming implementation is finalized; implementation
+`6.5.0` can therefore implement `spec-6.5.3`. Do not require both revision counters
+to be zero at integration. Assign the new release date when finalizing an
+implementation version; rebuilding or tagging the same candidate retains it.
+
+For an unchanged contract, specification revisions distinguish finalized edits to
+the authoritative root entrypoint, composition and selected package contents.
+Only implementation changes affecting the delivered result require an implementation
+revision. Keep workflow/test-only and non-authoritative documentation changes in
+Git history without manufacturing product releases.
+
+The implementer performs required version bookkeeping automatically within
+authorized work, including Major project contract bumps for approved incompatible
+changes. This is not permission to change product requirements, bypass Meta's
+package-Major approval, or perform unrequested Git operations. Record the baseline,
+classification and any no-bump decision in the relevant workflow.
+
+#### Working directly on the primary branch
+
+Support solo and small projects that work directly on `main`. No branch-creation
+or branch-merge workflow is required for that approach. For a contract change,
+update specifications, implement the change, validate it, and commit both aligned
+declarations and their corresponding work together under the applicable commit
+authorization. Never create separate primary-branch commits that first introduce
+a contract gap and later repair it.
+
+Temporary working-tree mismatches are allowed. Before every primary-branch commit,
+the implementer must inspect the proposed committed tree, including the staged
+versions and actual scope, to ensure composition and implementation Major.Minor
+match, declarations are valid, and the implementation satisfies the contract.
+This responsibility remains even if no automated hook or CI check is installed.
+
+If intermediate incomplete states need to be committed, use a development branch.
+If creation or switching has not already been authorized, explain the need and
+obtain authorization for that operation. Otherwise continue authorized work toward
+an aligned commit without requiring a branch. Do not discard work or change a
+version number solely to pass alignment checks.
+
+Projects should automate declaration, alignment and release checks in their
+normal validation, and protect the primary branch with required checks when
+their hosting setup permits. Such checks verify bookkeeping; tests and review
+establish conformance. Local checks supplement the implementer's responsibility.
+
+An editorial composition revision can enter the primary branch while the unchanged
+implementation declaration references an earlier exact revision at the same
+Major.Minor. Verify that the intervening specification changes do not change the
+contract. Do not rewrite a historical release's baseline.
+
+#### Release commits, tags and publication
+
+Committing a versioned change does not automatically create or publish a release.
+Create release tags only when the definer requests a release or an explicitly
+selected release policy authorizes them, after applicable validation and primary
+branch integration. Ordinary builds never create commits, tags or versions.
+
+Use annotated `spec-MAJOR.MINOR.REVISION` tags for finalized composition snapshots
+and annotated `vMAJOR.MINOR.REVISION` tags for finalized implementation releases
+in the project's main repository. An implementation tag contains its declaration,
+corresponding implementation and verification evidence; the referenced composition
+tag must identify the exact validated specification snapshot. When both snapshots
+are finalized together, both tags may point to the same commit. Reuse an existing
+verified composition tag for an unchanged baseline. An editorial-only specification
+release does not require an implementation tag.
+
+Check declaration/tag agreement, tagged source completeness, snapshot identity,
+Major.Minor alignment, required checks and conflicts with existing tags before
+creating tags. Never move, replace or reuse a published tag for different content;
+prefer a new version. An existing tag at the same verified release commit needs
+no recreation. Distinguish a local candidate, a local tag, a published tag, and a
+distributed build in reports. Follow repository permissions for commits and remote
+publication; when publication is authorized, publish the relevant commits and tags
+together, atomically where supported, then verify their remote identities.
+
+Package tags continue following Meta in each package's own source repository.
+Projects releasing multiple independently versioned implementations, or also
+publishing a package in the same Git tag namespace, must define unambiguous tag
+prefixes before release. Do not silently repurpose historical tags.
+
+Release/tag creation does not close a workflow or substitute for explicit closure
+confirmation. Missing required checks block a release; report them honestly.
+
+#### Adopting this policy in an existing project
+
+Inventory existing package, composition and implementation versions, declarations,
+build sources and published tags. Preserve their history. During authorized
+specification adoption, document the new requirements and the implementation gap;
+do not claim the build already consumes a declaration that does not exist.
+
+During the corresponding implementation update, reconcile specifications with
+implemented behavior, introduce the release declaration and its build consumers,
+remove competing hand-edited metadata, and add applicable validation. Select an
+explicit first aligned contract baseline with versions that avoid existing release
+identities and preserve platform update ordering. Package Major versions do not
+by themselves select the application's new Major.
+
+Until that migration is implemented and checked, keep the specification changes
+as an explicitly incomplete local candidate or on an authorized development branch.
+Do not commit an unaligned adoption state on the primary branch or tag it as an
+aligned release. This permits specifications to be prepared before implementation
+without weakening the primary-branch rule. A specification-only project without
+an implementation declares only the composition version; a new implementation
+normally starts at `0.1.0` / `spec-0.1.0` unless another baseline is defined.
 
 ### Ambiguity and conflicts
 
@@ -586,6 +823,21 @@ For `Documentation refresh`, check that the owning specification package allows
 the documentation update, any generated documentation was refreshed through its
 required source or build step, and non-authoritative documentation does not
 override specifications or implementation truth.
+
+For `Development branch creation`, check that the authorized branch exists at the
+intended baseline, local work was preserved, starting versions/commit are recorded,
+and linked feature workflows retain their own scope. Do not require feature
+completion or remote publication to deliver branch setup.
+
+For `Development branch merge`, check that the requested operation was authorized,
+readiness was evaluated against the actual source/target commits and combined
+result, version alignment and applicable checks passed, and the request/merge
+outcome is recorded. If blocked, no merge request or merge was performed and the
+definer received the specific blockers and consequences.
+
+For all version-affecting work, verify the classification, declarations and
+primary-branch invariant before committing. For release work, verify the exact
+specification baseline, tags and any authorized remote publication separately.
 
 For `Exception`, check that the exception record explains why ordinary workflow
 handling was not enough, what safeguards were preserved, what risk remains, and

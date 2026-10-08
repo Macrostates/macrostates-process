@@ -31,6 +31,21 @@ Workflow closure requires explicit definer confirmation, including completion,
 abandonment, and supersession. When work appears done, suggest closure and keep
 the workflow open until the definer confirms. See [Execution](003_execution.md).
 
+The implementer maintains contract versions automatically: compositions use
+`spec-MAJOR.MINOR.REVISION`, implementations use `MAJOR.MINOR.REVISION`, with
+independent revisions. Direct primary-branch development is supported; committed
+integrated states must have matching Major.Minor and actual contract coverage.
+Development branches may hold provisional gaps. See [Concepts](001_concepts.md#contract-based-versioning),
+[Version declarations](002_artifacts.md#version-declarations) and
+[Versioning and integration](003_execution.md#versioning-and-integration).
+Existing projects must complete the documented adoption before committing an
+aligned baseline; changing numbers alone does not establish conformance.
+
+Development branch creation and merge are optional, explicit workflow types.
+On a definer-requested merge request or merge, check readiness first; if required
+checks fail or remain unavailable, clearly warn and do not perform that operation.
+See [Development branch merge](003_execution.md#development-branch-merge).
+
 Specification edits stay within the project context of the request. After
 committing, inspect other package copies and suggest applicable pulls; obtain
 explicit definer approval before updating another context. See
@@ -52,6 +67,8 @@ handling. Read an annex only when a core document says the situation applies.
 - Definer support during process execution.
 - Documentation ownership and authority.
 - Common workflows and workflow continuity.
+- Contract-based composition/implementation versioning and release declarations.
+- Optional development branch creation and validated integration workflows.
 - Project scaffolding during specification.
 - Workflow execution against specifications.
 - Subproject coordination inside a parent project.
