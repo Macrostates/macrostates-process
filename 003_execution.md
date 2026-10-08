@@ -16,7 +16,7 @@ Before changing files:
 
 - Read the project-local specification entrypoint.
 - Discover and read applicable directory-scoped specifications before edits.
-- Check `implementation/workflows/` for open workflow records.
+- Check `.macrostates/implementation/workflows/` for open workflow records.
 - Decide whether the request starts, continues, switches, closes, or only
   reviews a workflow.
 - Create or update the workflow record before editing files.
@@ -84,29 +84,31 @@ record and read `annex_exceptions.md`.
 ### Directory-scoped specifications
 
 Follow the selected Meta package's `002_project-composition.md`, section
-`Directory-scoped specifications`, to discover applicable local `specs/main.md`
-entrypoints along each target path, including existing ancestors of new files.
-Read from outermost to innermost, follow each entrypoint's reading order, and
-respect the enclosing composition's authority placement and strict scope limits.
-Directory specifications are authoritative even without package metadata or an
-independent lifecycle. They remain part of the enclosing project's contract,
-phase, versioning and workflow context.
+`Directory-scoped specifications`, to discover applicable local
+`.macrostates/specs/main.md` entrypoints along each target path, including
+existing ancestors of new files. Read from outermost to innermost, follow each
+entrypoint's reading order, and respect the enclosing composition's authority
+placement and strict scope limits. Directory specifications are authoritative
+even without package metadata or an independent lifecycle. They remain part of
+the enclosing project's contract, phase, versioning and workflow context.
 
 This discovery is needed for internal edits, including specification edits; it
 does not require reading a component's internal specifications merely to consume
 its public interface. A local specification set does not make the directory a
 subproject. Identify separately composed or maintained units under
 [Subprojects](001_concepts.md#subprojects) before choosing lifecycle or tracking
-rules. Do not treat a separately composed subproject's `specs/main.md` as an
-ordinary directory entrypoint in the parent's composition.
+rules. Do not treat a separately composed subproject's
+`.macrostates/specs/main.md` as an ordinary directory entrypoint in the parent's
+composition.
 
 ### Subprojects
 
 When requested work affects a subproject, the implementer should identify both
-the parent-project context and the subproject context before changing files.
-Use the identification rules in [Concepts](001_concepts.md#subprojects), not the
-presence of a `specs/` directory alone. Ask only when an unresolved boundary
-materially changes the applicable authority, lifecycle or maintenance rules.
+the parent-project context and the subproject context before changing files. Use
+the identification rules in [Concepts](001_concepts.md#subprojects), not the
+presence of a `.macrostates/specs/` directory alone. Ask only when an unresolved
+boundary materially changes the applicable authority, lifecycle or maintenance
+rules.
 
 The parent-project context determines which parent workflow record covers the
 file change and how the subproject change affects the parent project.
@@ -146,15 +148,18 @@ definer explicitly starts parent project bootstrapping.
 ### Specification package scope and synchronization
 
 A request to update specification packages applies only to the project context
-of the request. In the root project, edit only its selected package instances;
-in a subproject or vendored project, edit only that project's selected instances.
+of the request. In the root project, target only its selected package instances;
+in a subproject or vendored project, work only within that selected context.
+For immutable archive packages, propose changes in the canonical source under
+an explicit specification request and import a verified new release after
+publication. Do not edit installed snapshots or rewrite locks to accept changes.
+Project-owned local specifications remain directly editable.
 Determine context from the definer's request and the project being worked on.
 If the target context is genuinely unclear, clarify it before editing packages.
 Only an explicit request identifying additional contexts expands this scope.
 
 Identical package names, identical files, a shared upstream repository, or a
-shared Git subtree source do not authorize changing other copies. Git subtree
-copies are independent. Do not propagate edits by copying files, rewriting other
+shared Git subtree source do not authorize changing other copies. Package copies are independent, whether archive snapshots or Git subtrees. Do not propagate edits by copying files, rewriting other
 compositions, or updating root/vendor packages in parallel merely to keep them
 aligned. Parent workflow tracking does not expand the authorized edit scope.
 
@@ -166,16 +171,17 @@ to synchronize. Do not publish changes without authorization; if the changes hav
 not been published, distinguish a local candidate from an upstream update that
 can already be pulled.
 
-When an update is available, suggest a specific pull to the definer. Identify the
+When an update is available, suggest a specific update to the definer. Identify the
 destination project and package, current and proposed versions or revisions,
-source, compatibility implications, and any local changes or missing subtree
-history that would require reconciliation. If no applicable update is found,
-report that briefly. Never perform the pull until the definer explicitly approves
+source, compatibility implications, and local modifications, stale locks or
+missing subtree history requiring reconciliation. Use the selected source
+mechanism: verified archive installation or explicit Git-subtree maintenance. If no applicable update is found,
+report that briefly. Never perform the update until the definer explicitly approves
 that destination and update. An already explicit approval remains valid; do not
 request it again. Approval to edit, commit, or push the source package alone is
 not approval to update another context.
 
-After an approved pull, follow the destination project's workflow and Git rules,
+After an approved update, follow the destination project's workflow and Git rules,
 validate the imported package and dependencies, and update its composition and
 entrypoint to match the actual imported files. Do not advertise a new selected
 version or installed revision before importing it successfully. Record pending
@@ -189,7 +195,7 @@ workflow.
 
 Signals may include:
 
-- The project phase recorded in `implementation/main.md`.
+- The project phase recorded in `.macrostates/implementation/main.md`.
 - Whether project-local specification files exist.
 - Whether package metadata and package composition exist.
 - Whether implementation documentation exists.
@@ -210,10 +216,10 @@ project state.
 
 The implementer should check for at least these consistency problems:
 
-- `implementation/main.md` is missing, but workflow records exist.
-- `implementation/main.md` is missing, but source code, tests, generated
+- `.macrostates/implementation/main.md` is missing, but workflow records exist.
+- `.macrostates/implementation/main.md` is missing, but source code, tests, generated
   artifacts, release artifacts, or other implementation files exist.
-- `implementation/main.md` records a phase that contradicts the visible project
+- `.macrostates/implementation/main.md` records a phase that contradicts the visible project
   contents.
 - Workflow records imply an open or past implementation effort, but
   implementation documentation is absent or clearly stale.
@@ -241,14 +247,14 @@ Before changing files, the implementer should check whether:
 When this assessment affects the workflow choice, ask the definer to confirm the
 intended state before proceeding.
 
-If `implementation/main.md` does not exist, no workflow records exist, and no
-implementation appears to exist, assume the project is in the `specification`
-phase. After creating the first workflow record, create `implementation/main.md`
-and record at least the current project phase and the absence of an
-implementation baseline.
+If `.macrostates/implementation/main.md` does not exist, no workflow records
+exist, and no implementation appears to exist, assume the project is in the
+`specification` phase. After creating the first workflow record, create
+`.macrostates/implementation/main.md` and record at least the current project
+phase and the absence of an implementation baseline.
 
-If no workflow records exist but implementation appears to exist, or if
-workflow records exist but `implementation/main.md` is missing, the project
+If no workflow records exist but implementation appears to exist, or if workflow
+records exist but `.macrostates/implementation/main.md` is missing, the project
 state needs recovery. Read `annex_project-state.md`.
 
 ### Existing open workflow records

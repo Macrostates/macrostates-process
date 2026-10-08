@@ -5,12 +5,12 @@ specification-driven work.
 
 ## Specification documents
 
-The project-root `specs/` contains the composition and specification packages
-defined by Meta. Implementation directories may also contain repository-specific
-`specs/main.md` entrypoints and related directory-scoped specifications under
-the selected Meta package's `002_project-composition.md`, section
-`Directory-scoped specifications`.
-These local documents are not specification packages. All specification documents
+The project-root `.macrostates/specs/` contains the composition and
+specification packages defined by Meta. Implementation directories may also
+contain repository-specific `.macrostates/specs/main.md` entrypoints and related
+directory-scoped specifications under the selected Meta package's
+`002_project-composition.md`, section `Directory-scoped specifications`. These
+local documents are not specification packages. All specification documents
 describe intended behavior and are definer-owned.
 
 Implementers must not edit specifications unless the definer deliberately asks
@@ -21,10 +21,20 @@ Do not edit specifications merely to make incomplete implementation appear
 compliant. When the desired behavior changes, update the relevant specification
 only as an explicit specification change.
 
+## Layout adoption
+
+Process 3 uses Meta 2's `.macrostates/` layout. Move specification and
+implementation artifacts together during explicitly requested adoption. Preserve
+workflow/decision history and pending acceptance, update links, build consumers
+and agent pointers, and validate the result. Moving files does not accept a
+phase or baseline. Projects selecting earlier releases retain their own artifact
+paths. Application source and tests stay outside these documentation
+directories.
+
 ## Implementation documents
 
-`implementation/` contains implementation documents. Implementation documents
-describe what the system currently is and are implementer-owned.
+`.macrostates/implementation/` contains implementation documents. Implementation
+documents describe what the system currently is and are implementer-owned.
 
 Implementers should maintain implementation documentation alongside code and
 keep it honest about partial support, known gaps, and important operational
@@ -42,15 +52,15 @@ specifications.
 The main implementation entrypoint should be:
 
 ```text
-implementation/
+.macrostates/implementation/
   main.md
 ```
 
-`implementation/main.md` is the current-state architecture entrypoint: a reader
-should be able to understand what is implemented now, how its major parts work
-together, and why significant choices apply, without reconstructing a sequence
-of deliveries. Organize it by present responsibilities and behavior, not by
-release, date, request, or workflow. It should include:
+`.macrostates/implementation/main.md` is the current-state architecture
+entrypoint: a reader should be able to understand what is implemented now, how
+its major parts work together, and why significant choices apply, without
+reconstructing a sequence of deliveries. Organize it by present responsibilities
+and behavior, not by release, date, request, or workflow. It should include:
 
 - Project phase.
 - Current implementation summary and applicable version/declaration references.
@@ -105,19 +115,19 @@ history need not be duplicated or moved solely to refresh the overview.
 ## Version declarations
 
 The specification composition's authoritative version is `project.version` in
-`specs/composition.yaml` (or the single alternative spelling allowed by Meta).
-Use the `spec-MAJOR.MINOR.REVISION` format defined in
-[Concepts](001_concepts.md#contract-based-versioning). This identifies the complete
-specification snapshot: root entrypoint, composition, selected package content
-and applicable repository-specific directory specifications. Independently
-composed subprojects retain their own snapshots; the parent records its
-integration requirements.
-Package versions and source selectors remain independent Meta-owned fields.
+`.macrostates/specs/composition.yaml` (or the single alternative spelling
+allowed by Meta). Use the `spec-MAJOR.MINOR.REVISION` format defined in
+[Concepts](001_concepts.md#contract-based-versioning). This identifies the
+complete specification snapshot: root entrypoint, composition, selected package
+content and applicable repository-specific directory specifications.
+Independently composed subprojects retain their own snapshots; the parent
+records its integration requirements. Package versions and source selectors
+remain independent Meta-owned fields.
 
 Once an implementation baseline exists, its authoritative release declaration is:
 
 ```text
-implementation/
+.macrostates/implementation/
   release.yaml
 ```
 
@@ -172,15 +182,16 @@ their first aligned baseline.
 Subprojects may have their own artifacts, but this process does not require all
 subprojects to use the same artifact structure as the parent project.
 
-A subproject may have local `specs/`, `implementation/`, workflow records,
-decision records, metadata, generated documentation, or a different lifecycle
-defined by another tool or project convention. A subproject may also have no
-local specifications or lifecycle artifacts at all.
+A subproject may have local `.macrostates/specs/`,
+`.macrostates/implementation/`, workflow records, decision records, metadata,
+generated documentation, or a different lifecycle defined by another tool or
+project convention. A subproject may also have no local specifications or
+lifecycle artifacts at all.
 
-The existence of a local `specs/main.md` does not by itself establish a subproject.
-Repository-specific directory specifications remain in the enclosing project's
-artifact and versioning context unless a separate project context is established
-under [Concepts](001_concepts.md#subprojects).
+The existence of a local `.macrostates/specs/main.md` does not by itself
+establish a subproject. Repository-specific directory specifications remain in
+the enclosing project's artifact and versioning context unless a separate
+project context is established under [Concepts](001_concepts.md#subprojects).
 
 When subproject artifacts exist, the implementer should inspect and respect
 them before changing subproject-internal files. When they do not exist, the
@@ -194,9 +205,9 @@ work can be resumed from either context.
 
 ## Decision records
 
-`implementation/decisions/` contains ADRs for meaningful implementation choices
-not settled by the specifications. ADRs are part of implementation
-documentation and follow the same ownership rules.
+`.macrostates/implementation/decisions/` contains ADRs for meaningful
+implementation choices not settled by the specifications. ADRs are part of
+implementation documentation and follow the same ownership rules.
 
 Decision records should be specific enough that a later maintainer can
 understand why the choice was made and what would justify changing it.
@@ -214,7 +225,7 @@ to related specifications or implementation notes.
 Decision record filenames should use this format:
 
 ```text
-implementation/
+.macrostates/implementation/
   decisions/
     0001-short-descriptive-name.md
 ```
@@ -250,16 +261,16 @@ first be covered by an open workflow record.
 Workflow records live under:
 
 ```text
-implementation/
+.macrostates/implementation/
   workflows/
     <open-workflow>.md
     history/
       <closed-workflow>.md
 ```
 
-Open workflows live directly in `./implementation/workflows/`.
+Open workflows live directly in `./.macrostates/implementation/workflows/`.
 
-Closed workflows live in `./implementation/workflows/history/`.
+Closed workflows live in `./.macrostates/implementation/workflows/history/`.
 
 The `history/` directory may usually be ignored during session startup unless
 the definer asks for historical context or an open workflow references a closed
@@ -439,13 +450,13 @@ implementation tasks. An open record must not become a catch-all for new work;
 apply [the per-request scope check](003_execution.md#scope-check-for-every-request).
 
 Only workflows with open statuses should remain directly under
-`./implementation/workflows/`. When a workflow receives a closed status, move
-its file to `./implementation/workflows/history/`.
+`./.macrostates/implementation/workflows/`. When a workflow receives a closed
+status, move its file to `./.macrostates/implementation/workflows/history/`.
 
 When a workflow is superseded by a broader workflow, the superseding workflow
 should identify the superseded record and summarize the inherited work. The
 superseded workflow should identify the superseding record, use status
-`superseded`, and move to `./implementation/workflows/history/`.
+`superseded`, and move to `./.macrostates/implementation/workflows/history/`.
 
 Use these change depths:
 
@@ -466,7 +477,7 @@ different area, or different impact profile should usually get a separate
 workflow.
 
 At the beginning of a work session, before touching files, the implementer must
-check for open workflow entries in `./implementation/workflows/`.
+check for open workflow entries in `./.macrostates/implementation/workflows/`.
 
 If open workflows exist, the implementer must summarize them to the definer
 before starting new work. The summary should identify:

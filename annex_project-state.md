@@ -30,15 +30,15 @@ When a project appears conflicting, the implementer should:
 
 ## Examples
 
-If `implementation/main.md` is missing but workflow records exist, treat the
-project as `conflicting`. The implementation documentation may have been lost,
-never created, or intentionally removed. Open an `Exception` workflow and ask
-the definer which explanation is correct.
+If `.macrostates/implementation/main.md` is missing but workflow records exist,
+treat the project as `conflicting`. The implementation documentation may have
+been lost, never created, or intentionally removed. Open an `Exception` workflow
+and ask the definer which explanation is correct.
 
-If `implementation/main.md` is missing but source code, tests, generated
-artifacts, release artifacts, or other implementation files exist, treat the
-project as `conflicting`. Ask whether the visible implementation should be
-accepted as a starting point, reconstructed from, removed, or ignored.
+If `.macrostates/implementation/main.md` is missing but source code, tests,
+generated artifacts, release artifacts, or other implementation files exist,
+treat the project as `conflicting`. Ask whether the visible implementation
+should be accepted as a starting point, reconstructed from, removed, or ignored.
 
 If no workflow records exist but implementation appears to exist, do not assume
 the implementation is invalid. Tell the definer that the implementation is not
@@ -49,8 +49,8 @@ documentation, and close the exception when the project has a coherent phase
 and baseline.
 
 If implementation documentation was lost but source code remains, suggest
-reconstructing `implementation/main.md` and any necessary implementation
-documentation from the current code and specifications.
+reconstructing `.macrostates/implementation/main.md` and any necessary
+implementation documentation from the current code and specifications.
 
 If workflow records were intentionally cleaned up, record that explanation in
 the exception workflow before starting a new workflow history.

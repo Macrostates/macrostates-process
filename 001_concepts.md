@@ -163,8 +163,9 @@ Identify a subproject from the definer's explicit designation, the enclosing
 project's specifications, or established metadata and maintenance practices that
 show a partly separate lifecycle. Evidence may include its own composition,
 release policy, upstream repository or maintenance records. A directory name,
-source package, build file or `specs/main.md` alone is not enough to infer a
-separate lifecycle. No universal marker file or subproject registry is required.
+source package, build file or `.macrostates/specs/main.md` alone is not enough
+to infer a separate lifecycle. No universal marker file or subproject registry
+is required.
 
 In particular, repository-specific directory specifications may describe an
 ordinary component that remains entirely within the parent project's lifecycle.
