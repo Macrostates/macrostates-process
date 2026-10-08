@@ -15,6 +15,11 @@ This section summarizes rules expanded in the package documents below. Use it
 for orientation, but apply the detailed rules in the referenced documents when
 doing the work.
 
+Implementation entrypoints and topic documents describe the current architecture,
+behavior, rationale and gaps. Workflow chronology, decision history and dated
+validation retain their separate roles; do not accumulate release notes in the
+current-state overview. See [Artifacts](002_artifacts.md#implementation-documents).
+
 Before changing any project file, the implementer must check workflow records
 and ensure an open workflow record covers the change. See
 [Artifacts](002_artifacts.md) for workflow record structure and

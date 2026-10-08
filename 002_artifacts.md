@@ -41,14 +41,17 @@ implementation/
   main.md
 ```
 
-`implementation/main.md` should summarize the current implementation. It should
-include:
+`implementation/main.md` is the current-state architecture entrypoint: a reader
+should be able to understand what is implemented now, how its major parts work
+together, and why significant choices apply, without reconstructing a sequence
+of deliveries. Organize it by present responsibilities and behavior, not by
+release, date, request, or workflow. It should include:
 
 - Project phase.
-- Current implementation summary.
+- Current implementation summary and applicable version/declaration references.
 - Implemented capabilities.
 - Known gaps.
-- Important files or modules.
+- Important files or modules, their responsibilities and interactions.
 - Verification guidance.
 - Links to topic documents and decision records.
 
@@ -63,6 +66,36 @@ Topic implementation documents should usually include:
 - Verification guidance.
 - Known gaps.
 - Related decisions.
+
+### Current state and historical records
+
+Keep the main entrypoint and topic descriptions consolidated as the implementation
+changes. Replace or remove obsolete descriptions rather than appending a newer
+account beside them. Explain important current rationale directly or link to the
+applicable decision. Retain older-version details here only when they explain a
+currently supported compatibility path, operating constraint or unresolved gap;
+state that scope explicitly.
+
+Use the existing artifact roles for history:
+
+- Workflow records own requests, progress, delivery/acceptance, closure and the
+  sequence of work. Link to them rather than copying their chronology into the
+  current-state description.
+- Decision records preserve the context and rationale of a choice. Mark obsolete
+  decisions or portions as superseded and point to their replacement or current
+  implementation description; do not rewrite their historical evidence as current.
+- Validation evidence records what actually ran against which candidate and
+  environment, including failures and limitations. A dated result is historical
+  evidence, not an automatically current pass or open-work statement. Reusable
+  verification guidance describes current commands and prerequisites separately
+  from those results.
+
+Current gaps and verification limits still belong in the current-state documents;
+removing chronology must not hide incomplete behavior or missing qualification.
+Refer to authoritative version declarations instead of adding competing release
+metadata. Workflow links may provide navigation without turning the entrypoint
+into a second status ledger. Preserve useful links when consolidating; existing
+history need not be duplicated or moved solely to refresh the overview.
 
 ## Version declarations
 

@@ -579,6 +579,15 @@ Follow the specification package that owns the documentation type. Do not create
 or reorganize documentation files unless the definer asks or the owning package
 allows it.
 
+When refreshing implementation documentation, follow
+[the current-state and history boundary](002_artifacts.md#current-state-and-historical-records).
+Compare claims with the relevant source, configuration and tests; distinguish
+implemented behavior from intended behavior and historical validation. Consolidate
+obsolete descriptions, check decision supersession and links, and retain current
+gaps. Put the refresh findings and checks in its workflow record, not as a new
+chronological section in the implementation entrypoint. A documentation-only
+refresh does not by itself require a new application release or runtime retest.
+
 ### Development branch creation
 
 1. Establish the definer-authorized objective, starting branch and repository.
